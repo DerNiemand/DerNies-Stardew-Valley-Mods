@@ -1,0 +1,30 @@
+{
+	"gridscale": 2.0, //the scale at which the grid and blocks will be displayed
+	"cellSize": 32, //the original pixel size of a single cell in the grid and the blocks (before scale is applied)
+	"innerBorderThickness": 4, // the thickness of the lines between the cells in pixels 
+	"outerBorderThickness": 8, // the thickness of the outer border of the grid
+	"columnCount": 7, //the amount of columns in the grid
+	"rowCount": 11, //the amount of rows in the grid
+	"smallRewardRow": 7, //the amount of rows needed to win a minor reward
+	"largeRewardRow": 11, //the amount of rows needed to win a major reward
+	"timeBetweenMoves": 0.3, //the amount of time between the blocks moving in seconds (lower = faster)
+	"moveTimeModifiers": {
+		"2": 0.03,
+		"4": 0.03,
+		"6": 0.03,
+		"8": 0.03,
+		"9": 0.04,
+		"10": 0.04
+	}, 
+	"smallRewardList": [
+		"(O)24",
+		"(W)6",
+		"(P)2"
+	],
+	"largeRewardList": [
+		"(O)72",
+		"(O)74",
+		"(O)242",
+		"(W)40"
+	]
+}

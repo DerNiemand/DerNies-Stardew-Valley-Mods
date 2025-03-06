@@ -1,0 +1,10 @@
+{
+  "Name": "Stack Attack",
+  "Author": "DerNie and SuzukiPc",
+  "Version": "0.1.1",
+  "Description": "A simple Stacker Minigame with custimizable rewards. The graphics are made to be easily sawpped out to customize it.",
+  "UniqueID": "dernie.stackytacky",
+  "EntryDll": "StackAttack.dll",
+  "MinimumApiVersion": "4.0.0",
+  "UpdateKeys": []
+}
