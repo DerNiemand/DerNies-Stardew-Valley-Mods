@@ -1,5 +1,5 @@
 # The Project 
-This is a collection of mods adding different arcade style Minigames to Stardew Valley. They are intended to be used as part of a Mod being made by SuzukiPC.
+This is a collection of mods adding different arcade style Minigames to Stardew Valley. They are intended to be used as part of a Mod being made by [SuzukiPC](https://next.nexusmods.com/profile/suzukiPC).
 While all Minigames work standalone, they don't have any Place in the World where they can be played by interacting, and are only available through console commands.
 
 &nbsp;  
