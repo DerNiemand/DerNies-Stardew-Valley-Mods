@@ -4,10 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using StardewValley;
 using StardewValley.Minigames;
-using System.Diagnostics;
 using StardewValley.Menus;
 using StardewModdingAPI.Events;
-using StardewModdingAPI;
 
 namespace StackAttack
 {
@@ -115,6 +113,8 @@ namespace StackAttack
 		private BlockLine? nextLine;
 		private BlockLine? prevLine;
 
+		private List<DropBlock> dropBlocks;
+
 		private double timeToNextMove;
 		private double moveTimeModifier;
 
@@ -161,6 +161,8 @@ namespace StackAttack
 
             blockLines = new List<BlockLine>();
 
+			dropBlocks = new List<DropBlock>();
+
 			timeToNextMove = data.timeBetweenMoves;
 
             ModEntry.modHelper.Events.Display.WindowResized += OnScreenSizeChanged;
@@ -206,6 +208,11 @@ namespace StackAttack
 			foreach (var line in blockLines)
 			{
 				line.Draw(b);
+			}
+
+			foreach (var dropBlock in dropBlocks)
+			{
+				dropBlock.Draw(b);
 			}
 
 			if (activeText != null)
@@ -351,8 +358,12 @@ namespace StackAttack
 			if (prevLine != null && nextLine != null)
 			{
 				var targetColumns = prevLine.GetBlockColumns();
-				var blocksLeft = nextLine.CheckBlockColumns(targetColumns);
-				if (!blocksLeft)
+				var droppedBlocks = nextLine.DropBlockColumns(targetColumns);
+				foreach ( var block in droppedBlocks)
+				{
+					CreateDropBlock(block.Key, block.Value);
+				}
+				if (nextLine.BlockCount <= 0)
 				{
 					blockLines.Remove(nextLine);
 
@@ -388,14 +399,38 @@ namespace StackAttack
 		public bool tick(GameTime time)
 		{
 			double deltaTime = time.ElapsedGameTime.TotalSeconds;
+            if (dropBlocks.Count != 0)
+            {
+                timeToNextMove -= deltaTime;
 
-			if (!paused)
+                if (timeToNextMove <= 0)
+                {
+                    timeToNextMove = data.timeBetweenMoves;
+                    List<DropBlock> finishedDropBlocks = new List<DropBlock>();
+                    foreach (var block in dropBlocks)
+                    {
+                        var dropFinished = block.Move(new Vector2(0, (data.cellSize + data.innerBorderThickness) * data.gridScale * windowScale));
+                        if (dropFinished)
+                        {
+                            finishedDropBlocks.Add(block);
+                        }
+                    }
+                    foreach (var block in finishedDropBlocks)
+                    {
+                        dropBlocks.Remove(block);
+                    }
+
+					if(dropBlocks.Count == 0)
+					{
+                        timeToNextMove = data.timeBetweenMoves - moveTimeModifier;
+                    }
+                }
+            }
+            else if (!paused)
 			{
 				timeToNextMove -= deltaTime;
-
 				if (!gameOver)
 				{
-
 					if (timeToNextMove <= 0)
 					{
 						timeToNextMove = data.timeBetweenMoves - moveTimeModifier;
@@ -435,8 +470,8 @@ namespace StackAttack
 				if (data.largeRewardList.Count > 0)
 				{
 					Item item = ItemRegistry.Create(LargeRewardList[rand.Next(LargeRewardList.Count)]);
-					Game1.player.addItemToInventory(item);
-				}
+					Game1.player.addItemByMenuIfNecessary(item);
+                }
             }
             else if (blockLines.Count == data.smallRewardRow)
             {
@@ -444,7 +479,8 @@ namespace StackAttack
 				if(data.smallRewardList.Count > 0)
 				{
 					Item item = ItemRegistry.Create(SmallRewardList[rand.Next(SmallRewardList.Count)]);
-					Game1.player.addItemToInventory(item);
+					Game1.player.addItemByMenuIfNecessary(item);
+					
 				}
             }
             else
@@ -467,6 +503,26 @@ namespace StackAttack
 		{
 			float gridLeftPixel = GridPosition.X;
 			return gridLeftPixel + (data.outerBorderThickness * data.gridScale * windowScale) + ((data.innerBorderThickness + data.cellSize) * data.gridScale * windowScale * col);
+		}
+
+		public int GetDropDistance(int column)
+		{
+			var retVal = 0;
+			for (int i = blockLines.Count - 2;i >= 0;i--)
+			{
+				if (blockLines[i].GetBlockColumns().Contains(column))
+				{
+					return retVal;
+				}
+                retVal++;
+            }
+			return retVal;
+		}
+
+		public void CreateDropBlock(Block block, int column)
+		{
+			var dropAmount = GetDropDistance(column);
+			dropBlocks.Add(new DropBlock(block, dropAmount));
 		}
 	}
 }

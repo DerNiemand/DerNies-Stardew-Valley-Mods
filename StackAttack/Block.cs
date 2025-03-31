@@ -1,12 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using StackAttack;
+
 
 namespace StackAttack
 {
     class Block
     {
-        private readonly Texture2D blockTexture;
+        protected Texture2D blockTexture;
         private float scale;
 
         private Vector2 position;
@@ -16,6 +16,13 @@ namespace StackAttack
             blockTexture = ModEntry.modHelper.ModContent.Load<Texture2D>("assets/Block.png");
             this.scale = scale;
             this.position = position;
+        }
+
+        public Block(Block block)
+        {
+            blockTexture = ModEntry.modHelper.ModContent.Load<Texture2D>("assets/Block.png");
+            scale = block.scale;
+            position = block.position;
         }
 
         public void Draw(SpriteBatch b)

@@ -107,8 +107,9 @@ namespace StackAttack
             return result;
         }
 
-        public bool CheckBlockColumns(List<int> columns)
+        public Dictionary<Block, int> DropBlockColumns(List<int> columns)
         {
+            Dictionary<Block, int> droppedColumns = new Dictionary<Block, int>();
             List<int> deletionIndicies = new List<int>();
             int columLeftShift = 0;
             for (int i = 0; i <= blocks.Count - 1; i++)
@@ -117,11 +118,12 @@ namespace StackAttack
                 bool onOtherBlock = columns.Contains(currentColumn - i);
                 if (!onOtherBlock)
                 {
-                    if (i == blocks.Capacity - BlockCount)
+                    if (i == columLeftShift)
                     {
                         columLeftShift++;
                     }
                     deletionIndicies.Add(i);
+                    droppedColumns.Add(blocks[i],currentColumn - i);
                 }
             }
 
@@ -136,7 +138,7 @@ namespace StackAttack
 
             currentColumn -= columLeftShift;
 
-            return GetBlockCount() > 0;
+            return droppedColumns;
         }
 
         public void UpdateScale(float scale,float[] xPos, float yPos)
@@ -150,6 +152,4 @@ namespace StackAttack
             }
         }
     }
-
-
 }
