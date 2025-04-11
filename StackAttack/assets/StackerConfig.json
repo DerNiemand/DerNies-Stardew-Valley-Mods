@@ -8,7 +8,7 @@
 	"smallRewardRow": 7, //the amount of rows needed to win a minor reward
 	"largeRewardRow": 11, //the amount of rows needed to win a major reward
 	"timeBetweenMoves": 0.3, //the amount of time between the blocks moving in seconds (lower = faster)
-	"moveTimeModifiers": {
+	"moveTimeModifiers": { // the amount that the moves should speed up per line. Dictionary: Key = Line, Value = Speed up (higher value = faster value)
 		"2": 0.03,
 		"4": 0.03,
 		"6": 0.03,
