@@ -1,4 +1,4 @@
-/StackAttack/.vs
-/StackAttack/obj
-/StackAttack/bin
-StackAttack/.vscode
+**/.vs
+**/obj
+**/bin
+**/.vscode
